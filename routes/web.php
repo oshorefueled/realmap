@@ -1,6 +1,7 @@
 <?php
 use App\Events\SendLocation;
 use App\User;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,12 +18,12 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/map/{id}', function ($id) {
-    $user = User::where('id', $id)
-            ->first();
-    $data = ["data"=>"Pusher data"];
-    event(new SendLocation($data));
-    return response()->json(['status'=>'success', 'data'=>$user]);
+Route::get('/map', function (Request $request) {
+    $lat = $request->input('lat');
+    $long = $request->input('long');
+    $location = ["lat"=>$lat, "long"=>$long];
+    event(new SendLocation($location));
+    return response()->json(['status'=>'success', 'data'=>$location]);
 });
 
 Auth::routes();
